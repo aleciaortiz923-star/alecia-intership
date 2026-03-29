@@ -1,17 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import SubHeader from "../images/subheader.jpg";
 import ExploreItems from "../components/explore/ExploreItems";
 
 const Explore = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    const fetchHotCollections = async () => {
+      try {
+        const response = await axios.get(
+          "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"
+        );
+        setHotCollections(response.data);
+        console.log("Fetched hot collections:", response.data);
+      } catch (error) {
+        console.error("Error fetching hot collections:", error);
+      }
+    };
+
+    fetchHotCollections();
   }, []);
+
+  const [hotCollections, setHotCollections] = useState([]);
 
   return (
     <div id="wrapper">
       <div className="no-bottom no-top" id="content">
         <div id="top"></div>
-<h1></h1>
+
         <section
           id="subheader"
           className="text-light"
@@ -32,7 +49,7 @@ const Explore = () => {
         <section aria-label="section">
           <div className="container">
             <div className="row">
-              <ExploreItems />
+              <ExploreItems hotCollections={hotCollections} />
             </div>
           </div>
         </section>
