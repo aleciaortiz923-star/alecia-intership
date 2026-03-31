@@ -18,7 +18,7 @@ const Explore = () => {
         console.error("Error fetching hot collections:", error);
       }
     };
-
+<h1></h1>
     fetchHotCollections();
   }, []);
 
