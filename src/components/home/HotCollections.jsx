@@ -1,25 +1,65 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import OwlCarousel from "react-owl-carousel";
-import "owl.carousel/dist/assets/owl.carousel.css";
-import "owl.carousel/dist/assets/owl.theme.default.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "./HotCollections.css";
 
-const HotCollections = ({ hotCollections }) => {
-  const options = {
-    loop: true,
-    margin: 10,
-    nav: true,
-    responsive: {
-      0: {
-        items: 1,
+const HotCollections = ({ hotCollections, isLoading }) => {
+
+  const NextArrow = ({ onClick }) => {
+    return (
+      <div
+        className="slick-arrow next-arrow"
+        onClick={onClick}
+      >
+        <i className="fa fa-angle-right"></i>
+      </div>
+    );
+  };
+
+  const PrevArrow = ({ onClick }) => {
+    return (
+      <div
+        className="slick-arrow prev-arrow"
+        onClick={onClick}
+      >
+        <i className="fa fa-angle-left"></i>
+      </div>
+    );
+  };
+  const settings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    arrows: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    dots: false,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+        },
       },
-      600: {
-        items: 2,
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
       },
-      1000: {
-        items: 4,
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
       },
-    },
+    ],
   };
 
   return (
@@ -32,19 +72,38 @@ const HotCollections = ({ hotCollections }) => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-          {hotCollections.length > 0 ? (
-            <OwlCarousel className="owl-theme" {...options}>
+          {isLoading ? (
+            <Slider {...settings}>
+              {[...Array(4)].map((_, index) => (
+                <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" key={index}>
+                  <div className="nft_coll">
+                    <div className="nft_wrap">
+                      <div className="skeleton-box" style={{ height: "200px", width: "100%" }}></div>
+                    </div>
+                    <div className="nft_coll_pp">
+                      <div className="skeleton-circle"></div>
+                    </div>
+                    <div className="nft_coll_info">
+                      <div className="skeleton-line" style={{ width: "80%" }}></div>
+                      <div className="skeleton-line" style={{ width: "50%" }}></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          ) : hotCollections.length > 0 ? (
+            <Slider {...settings}>
               {hotCollections.map((item) => (
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" key={item.id}>
                   <div className="nft_coll">
                     <div className="nft_wrap">
                       <Link to={`/item-details/${item.id}`}>
-                        <img src={item.nftImage} className="lazy img-fluid" alt="" />
+                        <img src={item.nftImage} className="img-fluid" alt="" />
                       </Link>
                     </div>
                     <div className="nft_coll_pp">
                       <Link to={`/author/${item.authorId}`}>
-                        <img className="lazy pp-coll" src={item.authorImage} alt="" />
+                        <img className="pp-coll" src={item.authorImage} alt="" />
                       </Link>
                       <i className="fa fa-check"></i>
                     </div>
@@ -57,7 +116,7 @@ const HotCollections = ({ hotCollections }) => {
                   </div>
                 </div>
               ))}
-            </OwlCarousel>
+            </Slider>
           ) : (
             <p>No hot collections to display.</p>
           )}

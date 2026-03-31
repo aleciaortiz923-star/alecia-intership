@@ -9,24 +9,33 @@ import TopSellers from "../components/home/TopSellers";
 
 const Home = () => {
   useEffect(() => {
-    window.scrollTo(0, 0);
+      window.scrollTo(0, 0);
 
-    const fetchHotCollections = async () => {
-      try {
-        const response = await axios.get(
-          "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"
-        );
-        setHotCollections(response.data);
-        console.log("Fetched hot collections in Home:", response.data);
-      } catch (error) {
-        console.error("Error fetching hot collections in Home:", error);
-      }
-    };
+      const delayTimer = setTimeout(() => {
+        setMinimumDelayMet(true);
+      }, 1500);
 
-    fetchHotCollections();
-  }, []);
+      const fetchHotCollections = async () => {
+        try {
+          const response = await axios.get(
+            "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"
+          );
+          setHotCollections(response.data);
+        } catch (error) {
+         
+        } finally {
+          setDataFetched(true);
+        }
+      };
+
+      fetchHotCollections();
+
+      return () => clearTimeout(delayTimer);
+    }, []);
 
   const [hotCollections, setHotCollections] = useState([]);
+  const [dataFetched, setDataFetched] = useState(false);
+  const [minimumDelayMet, setMinimumDelayMet] = useState(false);
 
   return (
     <div id="wrapper">
@@ -34,7 +43,7 @@ const Home = () => {
         <div id="top"></div>
         <Landing />
         <LandingIntro />
-        <HotCollections hotCollections={hotCollections} />
+        <HotCollections hotCollections={hotCollections} isLoading={!dataFetched || !minimumDelayMet} />
         <NewItems />
         <TopSellers />
         <BrowseByCategory />
