@@ -12,8 +12,8 @@ const Home = () => {
       window.scrollTo(0, 0);
 
       const delayTimer = setTimeout(() => {
-        setMinimumDelayMet(true);
-      }, 1500);
+      setMinimumDelayMet(true);
+    }, 1000);
 
       const fetchHotCollections = async () => {
         try {

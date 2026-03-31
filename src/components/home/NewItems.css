@@ -1,0 +1,41 @@
+.slick-arrow.next-arrow,
+.slick-arrow.prev-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+  color: white;
+  font-size: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.slick-arrow.next-arrow:hover,
+.slick-arrow.prev-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.7); /* Slightly darker on hover */
+}
+
+.slick-arrow.next-arrow {
+  right: -50px; /* Adjust position as needed */
+}
+
+.slick-arrow.prev-arrow {
+  left: -50px; /* Adjust position as needed */
+}
+
+/* Media queries for smaller screens if needed */
+@media (max-width: 768px) {
+  .slick-arrow.next-arrow {
+    right: 5px;
+  }
+  .slick-arrow.prev-arrow {
+    left: 5px;
+  }
+}
