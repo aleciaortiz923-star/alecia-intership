@@ -2,20 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import CopyableAddress from "../components/CopyableAddress";
 
 const Author = () => {
   const { authorId } = useParams();
   const [author, setAuthor] = useState(null);
   const [nfts, setNfts] = useState([]);
-  const [dataFetched, setDataFetched] = useState(false);
-  const [minimumDelayMet, setMinimumDelayMet] = useState(false);
-<h1></h1>
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followerCount, setFollowerCount] = useState(0);
+
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    const delayTimer = setTimeout(() => {
-      setMinimumDelayMet(true);
-    }, 1000);
 
     const fetchAuthorData = async () => {
       try {
@@ -24,19 +21,22 @@ const Author = () => {
         );
         setAuthor(response.data);
         setNfts(response.data.nftCollection);
+        setFollowerCount(response.data.followers);
       } catch (error) {
         console.error("Error fetching author data:", error);
-      } finally {
-        setDataFetched(true);
       }
     };
 
     fetchAuthorData();
-
-    return () => clearTimeout(delayTimer);
   }, [authorId]);
 
-  const isLoading = !dataFetched || !minimumDelayMet;
+  const handleFollowToggle = () => {
+    setIsFollowing((prev) => !prev);
+    setFollowerCount((prev) => (isFollowing ? prev - 1 : prev + 1));
+  };
+
+
+  const isLoading = !author;
 
   if (isLoading) {
     return (
@@ -122,17 +122,20 @@ const Author = () => {
                     <img src={author.authorImage} alt={author.authorName} />
                     <i className="fa fa-check"></i>
                     <div className="profile_name">
-                      <h4>
-                        {author.authorName}
-                        <span className="profile_username">@{author.authorName.toLowerCase().replace(" ", "")}</span>
-                      </h4>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}>
+                        <h4>{author.authorName}</h4>
+                        <span className="profile_username">@{author.username || author.authorName.toLowerCase().replace(" ", "")}</span>
+                        <CopyableAddress address={author.address} />
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="profile_follow de-flex">
                   <div className="de-flex-col">
-                    <div className="profile_follower">{author.followers} followers</div>
-                    <button className="btn-main">Follow</button>
+                    <div className="profile_follower">{followerCount} followers</div>
+                    <button className="btn-main" onClick={handleFollowToggle}>
+                      {isFollowing ? "Unfollow" : "Follow"}
+                    </button>
                   </div>
                 </div>
               </div>
