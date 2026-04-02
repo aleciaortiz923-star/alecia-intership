@@ -6,14 +6,13 @@ import ExploreItems from "../components/explore/ExploreItems";
 const Explore = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-<h1></h1>
+
     const fetchHotCollections = async () => {
       try {
         const response = await axios.get(
           "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"
         );
         setHotCollections(response.data);
-        console.log("Fetched hot collections:", response.data);
       } catch (error) {
         console.error("Error fetching hot collections:", error);
       }
