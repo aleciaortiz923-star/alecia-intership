@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./NewItems.css";
+import Countdown from "../Countdown";
 
 const NewItems = () => {
   const [newItems, setNewItems] = useState([]);
@@ -137,9 +138,7 @@ const NewItems = () => {
                         <i className="fa fa-check"></i>
                       </Link>
                     </div>
-                    {item.countdown && (
-                      <div className="de_countdown">{item.countdown}</div>
-                    )}
+                    {item.expiryDate && <Countdown expiryDate={item.expiryDate} />}
 
                     <div className="nft__item_wrap">
                       <div className="nft__item_extra">

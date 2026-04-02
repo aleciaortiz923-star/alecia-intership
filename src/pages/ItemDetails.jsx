@@ -18,22 +18,30 @@ const ItemDetails = () => {
 
     const fetchItemDetails = async () => {
       try {
-        // Temporarily using sample data
-        const sampleData = {
-          nftImage: "https://placehold.co/600x600.png?text=Sample+NFT",
-          title: "Sample Rainbow Style #194",
-          views: 100,
-          likes: 74,
-          description: "This is a sample description for an NFT item. The actual data will come from the API once it is available.",
-          ownerId: 1,
-          ownerImage: "https://placehold.co/50x50.png?text=Owner",
-          ownerName: "Sample Owner",
-          creatorId: 1,
-          creatorImage: "https://placehold.co/50x50.png?text=Creator",
-          creatorName: "Sample Creator",
-          price: 1.85
-        };
-        setItemDetails(sampleData);
+        const response = await axios.get(
+          `https://us-central1-nft-cloud-functions.cloudfunctions.net/itemDetails?nftId=${nftId}`
+        );
+
+        if (response.data && Object.keys(response.data).length > 0) {
+          setItemDetails(response.data);
+        } else {
+          // API returned empty data, using sample data as a fallback
+          const sampleData = {
+            nftImage: "https://placehold.co/600x600.png?text=Sample+NFT",
+            title: "Sample Rainbow Style #194",
+            views: 100,
+            likes: 74,
+            description: "This is a sample description for an NFT item. The actual data will come from the API once it is available.",
+            ownerId: 1,
+            ownerImage: "https://placehold.co/50x50.png?text=Owner",
+            ownerName: "Sample Owner",
+            creatorId: 1,
+            creatorImage: "https://placehold.co/50x50.png?text=Creator",
+            creatorName: "Sample Creator",
+            price: 1.85
+          };
+          setItemDetails(sampleData);
+        }
       } catch (error) {
         console.error("Error fetching item details:", error);
       } finally {
