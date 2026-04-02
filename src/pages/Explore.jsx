@@ -6,7 +6,7 @@ import ExploreItems from "../components/explore/ExploreItems";
 const Explore = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-
+<h1></h1>
     const fetchHotCollections = async () => {
       try {
         const response = await axios.get(
