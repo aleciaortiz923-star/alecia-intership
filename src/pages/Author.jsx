@@ -9,7 +9,7 @@ const Author = () => {
   const [nfts, setNfts] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
   const [minimumDelayMet, setMinimumDelayMet] = useState(false);
-
+<h1></h1>
   useEffect(() => {
     window.scrollTo(0, 0);
 
