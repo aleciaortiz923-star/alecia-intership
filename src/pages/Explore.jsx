@@ -13,7 +13,6 @@ const Explore = () => {
           "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"
         );
         setHotCollections(response.data);
-        console.log("Fetched hot collections:", response.data);
       } catch (error) {
         console.error("Error fetching hot collections:", error);
       }
