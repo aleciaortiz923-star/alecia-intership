@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { getExploreItems } from "../api/axios";
 import SubHeader from "../images/subheader.jpg";
 import ExploreItems from "../components/explore/ExploreItems";
 
@@ -24,12 +24,10 @@ const Explore = () => {
 
     const fetchExploreItems = async () => {
       try {
-        const response = await axios.get(
-          `https://us-central1-nft-cloud-functions.cloudfunctions.net/explore${filter ? `?filter=${filter}` : ''}`
-        );
-        setExploreItems(response.data);
+        const data = await getExploreItems(filter);
+        setExploreItems(data);
       } catch (error) {
-        console.error("Error fetching explore items:", error);
+        // error is already logged in getExploreItems
       } finally {
         setDataFetched(true);
       }

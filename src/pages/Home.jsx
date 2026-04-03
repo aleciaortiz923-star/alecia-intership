@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { getHotCollections } from "../api/axios";
 import BrowseByCategory from "../components/home/BrowseByCategory";
 import HotCollections from "../components/home/HotCollections";
 import Landing from "../components/home/Landing";
@@ -17,12 +17,9 @@ const Home = () => {
 
       const fetchHotCollections = async () => {
         try {
-          const response = await axios.get(
-            "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"
-          );
-          setHotCollections(response.data);
+          const data = await getHotCollections();
+          setHotCollections(data);
         } catch (error) {
-         
         } finally {
           setDataFetched(true);
         }

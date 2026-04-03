@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import { getItemDetails } from "../api/axios";
 
 const ItemDetails = () => {
   const { nftId } = useParams();
@@ -11,16 +11,9 @@ const ItemDetails = () => {
     const fetchItemDetails = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `https://us-central1-nft-cloud-functions.cloudfunctions.net/itemDetails?id=${nftId}`
-        );
-        if (response.data && response.data.id) {
-          setItem(response.data);
-        } else {
-          setItem(null);
-        }
+        const data = await getItemDetails(nftId);
+        setItem(data);
       } catch (error) {
-        console.error("Error fetching item details:", error);
         setItem(null); // Also set to null on error
       } finally {
         setLoading(false);

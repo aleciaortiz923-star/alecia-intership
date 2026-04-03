@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { getTopSellers } from "../../api/axios";
 import "./TopSellers.css";
 
 const TopSellers = () => {
@@ -15,10 +15,8 @@ const TopSellers = () => {
 
     const fetchTopSellers = async () => {
       try {
-        const response = await axios.get(
-          "https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers"
-        );
-        setTopSellers(response.data);
+        const data = await getTopSellers();
+        setTopSellers(data);
       } catch (error) {
         console.error("Error fetching top sellers:", error);
       } finally {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { getAuthor } from "../api/axios";
 import { Link } from "react-router-dom";
 import CopyableAddress from "../components/CopyableAddress";
 
@@ -16,14 +16,12 @@ const Author = () => {
 
     const fetchAuthorData = async () => {
       try {
-        const response = await axios.get(
-          `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${authorId}`
-        );
-        setAuthor(response.data);
-        setNfts(response.data.nftCollection);
-        setFollowerCount(response.data.followers);
+        const data = await getAuthor(authorId);
+        setAuthor(data);
+        setNfts(data.nftCollection);
+        setFollowerCount(data.followers);
       } catch (error) {
-        console.error("Error fetching author data:", error);
+        // error is already logged in getAuthor
       }
     };
 

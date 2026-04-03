@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { getNewItems } from "../../api/axios";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -20,10 +20,8 @@ const NewItems = () => {
 
     const fetchNewItems = async () => {
       try {
-        const response = await axios.get(
-          "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems"
-        );
-        setNewItems(response.data);
+        const data = await getNewItems();
+        setNewItems(data);
       } catch (error) {
         console.error("Error fetching new items:", error);
       } finally {

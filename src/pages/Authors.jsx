@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { getAuthors } from '../api/axios';
 import SubHeader from '../images/subheader.jpg';
 import CopyableAddress from '../components/CopyableAddress';
 
@@ -12,10 +12,10 @@ const Authors = () => {
     window.scrollTo(0, 0);
     const fetchAuthors = async () => {
       try {
-        const response = await axios.get('https://us-central1-nft-cloud-functions.cloudfunctions.net/authors');
-        setAuthors(response.data);
+        const data = await getAuthors();
+        setAuthors(data);
       } catch (error) {
-        console.error('Error fetching authors:', error);
+        // error is already logged in getAuthors
       } finally {
         setLoading(false);
       }
