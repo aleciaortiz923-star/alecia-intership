@@ -11,7 +11,7 @@ const ItemDetails = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
+<h1></h1>
     const delayTimer = setTimeout(() => {
       setMinimumDelayMet(true);
     }, 1000);
