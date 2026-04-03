@@ -12,12 +12,12 @@ const ItemDetails = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://us-central1-nft-cloud-functions.cloudfunctions.net/itemDetails?nftId=${nftId}`
+          `https://us-central1-nft-cloud-functions.cloudfunctions.net/itemDetails?id=${nftId}`
         );
         if (response.data && response.data.id) {
           setItem(response.data);
         } else {
-          setItem(null); // Explicitly set to null if API returns invalid data
+          setItem(null);
         }
       } catch (error) {
         console.error("Error fetching item details:", error);
