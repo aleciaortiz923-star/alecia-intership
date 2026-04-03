@@ -1,99 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import EthImage from "../images/ethereum.svg";
 
 const ItemDetails = () => {
   const { nftId } = useParams();
-  const [itemDetails, setItemDetails] = useState(null);
-  const [dataFetched, setDataFetched] = useState(false);
-  const [minimumDelayMet, setMinimumDelayMet] = useState(false);
+  const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-<h1></h1>
-    const delayTimer = setTimeout(() => {
-      setMinimumDelayMet(true);
-    }, 1000);
-
     const fetchItemDetails = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
           `https://us-central1-nft-cloud-functions.cloudfunctions.net/itemDetails?nftId=${nftId}`
         );
-
-        if (response.data && Object.keys(response.data).length > 0) {
-          setItemDetails(response.data);
+        if (response.data && response.data.id) {
+          setItem(response.data);
         } else {
-          // API returned empty data, using sample data as a fallback
-          const sampleData = {
-            nftImage: "https://placehold.co/600x600.png?text=Sample+NFT",
-            title: "Sample Rainbow Style #194",
-            views: 100,
-            likes: 74,
-            description: "This is a sample description for an NFT item. The actual data will come from the API once it is available.",
-            ownerId: 1,
-            ownerImage: "https://placehold.co/50x50.png?text=Owner",
-            ownerName: "Sample Owner",
-            creatorId: 1,
-            creatorImage: "https://placehold.co/50x50.png?text=Creator",
-            creatorName: "Sample Creator",
-            price: 1.85
-          };
-          setItemDetails(sampleData);
+          setItem(null); // Explicitly set to null if API returns invalid data
         }
       } catch (error) {
         console.error("Error fetching item details:", error);
+        setItem(null); // Also set to null on error
       } finally {
-        setDataFetched(true);
+        setLoading(false);
       }
     };
 
     fetchItemDetails();
-
-    return () => clearTimeout(delayTimer);
   }, [nftId]);
 
-  const isLoading = !dataFetched || !minimumDelayMet;
-
-  if (isLoading) {
+  // 1. Show skeleton while loading
+  if (loading) {
     return (
       <div id="wrapper">
         <div className="no-bottom no-top" id="content">
           <div id="top"></div>
-          <section aria-label="section" className="mt90 sm-mt-0">
+          <section aria-label="section" className="mt-5">
             <div className="container">
               <div className="row">
                 <div className="col-md-6 text-center">
-                  <div className="skeleton-box" style={{ width: "100%", height: "400px" }}></div>
+                  <div className="skeleton-box" style={{ width: "100%", height: "500px" }}></div>
                 </div>
                 <div className="col-md-6">
                   <div className="item_info">
-                    <h2><div className="skeleton-line" style={{ width: "70%" }}></div></h2>
+                    <div className="skeleton-line" style={{ width: "70%", height: "30px", marginBottom: "15px" }}></div>
                     <div className="item_info_counts">
-                      <div className="item_info_views">
-                        <i className="fa fa-eye"></i>
-                        <div className="skeleton-line" style={{ width: "50px", display: "inline-block" }}></div>
-                      </div>
-                      <div className="item_info_like">
-                        <i className="fa fa-heart"></i>
-                        <div className="skeleton-line" style={{ width: "50px", display: "inline-block" }}></div>
-                      </div>
+                      <div className="skeleton-box" style={{ width: "80px", height: "30px" }}></div>
+                      <div className="skeleton-box" style={{ width: "80px", height: "30px" }}></div>
                     </div>
-                    <div><div className="skeleton-line" style={{ width: "100%" }}></div></div>
-                    <div className="d-flex flex-row">
-                      <div className="mr40">
-                        <h6>Owner</h6>
-                        <div className="item_author">
-                          <div className="author_list_pp">
-                            <div className="skeleton-circle"></div>
-                          </div>
-                          <div className="author_list_info">
-                            <div className="skeleton-line" style={{ width: "120px" }}></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <div className="skeleton-line" style={{ width: "100%", height: "80px", margin: "15px 0" }}></div>
+                    {/* Simplified skeleton for owner/creator */}
                   </div>
                 </div>
               </div>
@@ -104,76 +61,70 @@ const ItemDetails = () => {
     );
   }
 
-  if (!itemDetails) {
-    return <div>Item not found</div>;
+  // 2. Show "Not Found" message if loading is done and item is still null
+  if (!item) {
+    return (
+        <div id="wrapper">
+            <div className="no-bottom no-top" id="content">
+                <div id="top"></div>
+                <section aria-label="section" className="mt-5 text-center">
+                    <div className="container">
+                        <h2>Item Not Found</h2>
+                        <p>The NFT you are looking for could not be found. The API may be down or the ID is incorrect.</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    );
   }
 
+  // 3. Show the item details
   return (
     <div id="wrapper">
       <div className="no-bottom no-top" id="content">
         <div id="top"></div>
-        <section aria-label="section" className="mt90 sm-mt-0">
+        <section aria-label="section" className="mt-5">
           <div className="container">
             <div className="row">
               <div className="col-md-6 text-center">
-                <img
-                  src={itemDetails.nftImage}
-                  className="img-fluid img-rounded mb-sm-30 nft-image"
-                  alt=""
-                />
+                <img src={item.nftImage} className="img-fluid img-rounded mb-sm-30" alt={item.title} />
               </div>
               <div className="col-md-6">
                 <div className="item_info">
-                  <h2>{itemDetails.title}</h2>
-
+                  <h2>{item.title} #{item.tag}</h2>
                   <div className="item_info_counts">
-                    <div className="item_info_views">
-                      <i className="fa fa-eye"></i>
-                      {itemDetails.views}
-                    </div>
-                    <div className="item_info_like">
-                      <i className="fa fa-heart"></i>
-                      {itemDetails.likes}
-                    </div>
+                    <div className="item_info_views"><i className="fa fa-eye"></i>{item.views}</div>
+                    <div className="item_info_likes"><i className="fa fa-heart"></i>{item.likes}</div>
                   </div>
-                  <p>{itemDetails.description}</p>
+                  <p>{item.description}</p>
                   <div className="d-flex flex-row">
                     <div className="mr40">
                       <h6>Owner</h6>
                       <div className="item_author">
                         <div className="author_list_pp">
-                          <Link to={`/author/${itemDetails.ownerId}`}>
-                            <img className="lazy" src={itemDetails.ownerImage} alt="" />
+                          <Link to={`/author/${item.ownerId}`}>
+                            <img className="lazy" src={item.ownerImage} alt={item.ownerName} />
                             <i className="fa fa-check"></i>
                           </Link>
                         </div>
                         <div className="author_list_info">
-                          <Link to={`/author/${itemDetails.ownerId}`}>{itemDetails.ownerName}</Link>
+                          <Link to={`/author/${item.ownerId}`}><h4>{item.ownerName}</h4></Link>
                         </div>
                       </div>
                     </div>
-                    <div></div>
-                  </div>
-                  <div className="de_tab tab_simple">
-                    <div className="de_tab_content">
+                    <div>
                       <h6>Creator</h6>
                       <div className="item_author">
                         <div className="author_list_pp">
-                          <Link to={`/author/${itemDetails.creatorId}`}>
-                            <img className="lazy" src={itemDetails.creatorImage} alt="" />
+                          <Link to={`/author/${item.creatorId}`}>
+                            <img className="lazy" src={item.creatorImage} alt={item.creatorName} />
                             <i className="fa fa-check"></i>
                           </Link>
                         </div>
                         <div className="author_list_info">
-                          <Link to={`/author/${itemDetails.creatorId}`}>{itemDetails.creatorName}</Link>
+                          <Link to={`/author/${item.creatorId}`}><h4>{item.creatorName}</h4></Link>
                         </div>
                       </div>
-                    </div>
-                    <div className="spacer-40"></div>
-                    <h6>Price</h6>
-                    <div className="nft-item-price">
-                      <img src={EthImage} alt="" />
-                      <span>{itemDetails.price}</span>
                     </div>
                   </div>
                 </div>
