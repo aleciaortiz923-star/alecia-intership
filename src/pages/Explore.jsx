@@ -1,55 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { getExploreItems } from "../api/axios";
+import React, { useEffect } from "react";
 import SubHeader from "../images/subheader.jpg";
 import ExploreItems from "../components/explore/ExploreItems";
 
 const Explore = () => {
-  const [exploreItems, setExploreItems] = useState([]);
-  const [dataFetched, setDataFetched] = useState(false);
-  const [minimumDelayMet, setMinimumDelayMet] = useState(false);
-  const [filter, setFilter] = useState("");
-  const [isFiltering, setIsFiltering] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(8);
-
-  const loadMore = () => {
-    setVisibleCount((prevCount) => prevCount + 4);
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    const delayTimer = setTimeout(() => {
-      setMinimumDelayMet(true);
-    }, 1500);
-
-    const fetchExploreItems = async () => {
-      try {
-        const data = await getExploreItems(filter);
-        setExploreItems(data);
-      } catch (error) {
-        // error is already logged in getExploreItems
-      } finally {
-        setDataFetched(true);
-      }
-    };
-
-    fetchExploreItems();
-
-    return () => clearTimeout(delayTimer);
-  }, [filter]);
-
-  const handleFilterChange = (e) => {
-    setIsFiltering(true);
-    setFilter(e.target.value);
-    setVisibleCount(8);
-    setTimeout(() => {
-      setIsFiltering(false);
-    }, 500);
-  };
-
-
-
-  const isLoading = !dataFetched || !minimumDelayMet || isFiltering;
+  }, []);
 
   return (
     <div id="wrapper">
@@ -76,22 +32,7 @@ const Explore = () => {
         <section aria-label="section">
           <div className="container">
             <div className="row">
-              <div className="col-lg-12">
-                <div className="items_filter">
-                  <select id="filter-items" defaultValue="" onChange={handleFilterChange}>
-                    <option value="">Default</option>
-                    <option value="price_low_to_high">Price, Low to High</option>
-                    <option value="price_high_to_low">Price, High to Low</option>
-                    <option value="likes_high_to_low">Most liked</option>
-                  </select>
-                </div>
-              </div>
-              <ExploreItems
-                exploreItems={exploreItems}
-                loading={isLoading}
-                visibleCount={visibleCount}
-                loadMore={loadMore}
-              />
+              <ExploreItems />
             </div>
           </div>
         </section>

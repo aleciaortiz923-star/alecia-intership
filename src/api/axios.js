@@ -1,13 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://us-central1-nft-cloud-functions.cloudfunctions.net",
-    // baseURL: "http://localhost:5001/nft-cloud-functions/us-central1",
-    timeout: 10000, // Optional: Set a timeout for requests
-    headers: {
-        "Content-Type": "application/json",
-    },
-});
+  baseURL: process.env.REACT_APP_API_URL//pulls from .env file
+})
 
 export const getAuthors = async () => {
   try {

@@ -1,22 +1,28 @@
 import Home from "./pages/Home";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
 import Explore from "./pages/Explore";
 import Author from "./pages/Author";
-import Authors from "./pages/Authors";
 import ItemDetails from "./pages/ItemDetails";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 
 function App() {
+  useEffect(() => {
+    // Remove any dark theme classes that might be causing the black page
+    document.body.classList.remove('dark-scheme', 'de-grey', 'de-clivus', 'de-black');
+  }, []);
+
   return (
     <Router>
       <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/explore" element={<Explore />} />
-        <Route path="/author/:authorId" element={<Author />} />
-        <Route path="/authors" element={<Authors />} />
-        <Route path="/item-details/:nftId" element={<ItemDetails />} />
+        <Route path="/author" element={<Author />} />
+        <Route path="/author/:id" element={<Author />} />
+        <Route path="/item-details" element={<ItemDetails />} />
+        <Route path="/item-details/:id" element={<ItemDetails />} />
       </Routes>
       <Footer />
     </Router>
