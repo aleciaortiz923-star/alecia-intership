@@ -19,7 +19,7 @@ const NewItems = () => {
           "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems"
         );
         console.log("Response received:", response);
-        <p></p>
+        <p>Response status: {response.status}</p>
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
